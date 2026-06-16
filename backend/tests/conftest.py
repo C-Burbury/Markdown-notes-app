@@ -1,7 +1,6 @@
 import pytest
-from sqlalchemy import event
 from fastapi.testclient import TestClient
-from app.database import engine, Base, get_db
+from app.database import engine, get_db
 from app.main import app
 from sqlalchemy.orm import Session
 
@@ -17,17 +16,9 @@ def connection():
 # Bind session to connection, savepoint stops app commits from changing real DB
 @pytest.fixture
 def db_session(connection):
-    session = Session(bind=connection)
-    session.begin_nested()
-
-    # After each savepoint ends, create a new one so that changes dont affect real DB
-    @event.listens_for(Session, "after_transaction_end")
-    def restart_savepoint(session, transaction):
-        if transaction.nested and not transaction._parent.nested:
-            session.begin_nested()
-    
-    yield session
-    session.close()
+    # SQLAlchemy 2.0: pass connection directly, savepoint mode handles commits
+    with Session(connection, join_transaction_mode="create_savepoint") as session:
+        yield session
 
 # Wire TestClient to test DB session so requests hit rollback protected session, not actual DB
 @pytest.fixture

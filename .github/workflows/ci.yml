@@ -10,7 +10,7 @@ jobs:
 
       - uses: astral-sh/setup-uv@v6
         with:
-          enable-caching: true
+          enable-cache: true
 
       - run: uv sync
         working-directory: backend

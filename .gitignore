@@ -1,3 +1,11 @@
+# Environment variables
 .env
 
+#Virtual Environment
 .venv
+
+#IDE settings
+.vscode
+
+# Packages
+__pycache__

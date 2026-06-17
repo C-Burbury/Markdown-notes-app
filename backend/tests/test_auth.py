@@ -1,8 +1,3 @@
-from fastapi.testclient import TestClient
-from app.main import app
-
-client = TestClient(app)
-
 def test_register_success(client):
     response = client.post("/auth/register", json = {
         "email": "test@example.com",

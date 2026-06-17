@@ -37,3 +37,6 @@ jobs:
 
       - run: uv run alembic upgrade head
         working-directory: backend
+        
+      - run: uv run pytest
+        working-directory: backend

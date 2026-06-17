@@ -21,4 +21,4 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 class TokenData(BaseModel):
-    email: str
+    id: int

@@ -22,3 +22,21 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: int
+
+class NoteCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=255)
+    body: str = ""
+
+class NoteUpdate(BaseModel):
+    title: str  | None = Field(default=None, min_length=1, max_length=255)
+    body: str | None = None
+
+class NoteOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    user_id: int
+    title: str
+    body: str
+    created_at: datetime
+    updated_at: datetime

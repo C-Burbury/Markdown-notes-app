@@ -40,3 +40,7 @@ class NoteOut(BaseModel):
     body: str
     created_at: datetime
     updated_at: datetime
+
+class NoteListOut(BaseModel):
+    items: list[NoteOut]
+    next_cursor: str | None

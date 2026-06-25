@@ -31,6 +31,15 @@ class NoteUpdate(BaseModel):
     title: str  | None = Field(default=None, min_length=1, max_length=255)
     body: str | None = None
 
+class TagCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+
+class TagOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+
 class NoteOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -43,4 +52,4 @@ class NoteOut(BaseModel):
 
 class NoteListOut(BaseModel):
     items: list[NoteOut]
-    next_cursor: str | None
+    next_cursor: str | None = None

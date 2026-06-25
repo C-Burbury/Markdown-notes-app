@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from app.models.note import Note
+from app.models.tag import Tag, note_tags
 from app.dependencies import get_current_user
 from app.schemas import NoteCreate, NoteOut, NoteUpdate, NoteListOut
 from sqlalchemy.orm import Session
@@ -22,9 +23,9 @@ def create(data: NoteCreate, current_user: User = Depends(get_current_user), db:
     return note
 
 @router.get("/", response_model = NoteListOut)
-def get_note_list(cursor: str | None = None, page_limit: int = Query(default=PAGE_SIZE, ge=1, le=100), 
+def get_note_list(cursor: str | None = None, page_limit: int = Query(default=PAGE_SIZE, ge=1, le=100,), 
     created_after: datetime | None = None, created_before: datetime | None = None,
-    sort: str = Query(default="desc", pattern="^(asc|desc)$"),
+    sort: str = Query(default="desc", pattern="^(asc|desc)$",), tag: str | None = None,
     current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     cursor_ts = cursor_id = None
     if cursor is not None:
@@ -45,6 +46,14 @@ def get_note_list(cursor: str | None = None, page_limit: int = Query(default=PAG
         stmt = stmt.where(Note.created_at >= created_after)
     if created_before is not None:
         stmt = stmt.where(Note.created_at <= created_before)
+    if tag is not None:
+        stmt = stmt.where(
+            Note.id.in_(
+                select(note_tags.c.note_id)
+                .join(Tag, Tag.id == note_tags.c.tag_id)
+                .where(Tag.name == tag, Tag.user_id == current_user.id)
+            )
+        )
     if asc:
         stmt = stmt.order_by(Note.created_at.asc(), Note.id.asc())
     else:

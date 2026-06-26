@@ -156,3 +156,19 @@ def test_ascending_order(client, register_and_login, db_session):
     assert len(ids) == len(set(ids))
     timestamps = [n["created_at"] for n in all_notes]
     assert timestamps == sorted(timestamps)
+
+def test_tag_filter(client, register_and_login):
+    headers = register_and_login("tagfilter@test.com")
+
+    note_a = client.post("/notes/", json={"title": "Tagged", "body": ""}, headers=headers).json()
+    note_b = client.post("/notes/", json={"title": "Untagged", "body": ""}, headers=headers).json()
+
+    client.post(f"/notes/{note_a['id']}/tags", json={"name": "python"}, headers=headers)
+
+    response = client.get("/notes/", headers=headers, params={"tag": "python"})
+    assert response.status_code == 200
+    items = response.json()["items"]
+    assert len(items) == 1
+    assert items[0]["id"] == note_a["id"]
+    assert all(item["id"] != note_b["id"] for item in items)
+

@@ -53,3 +53,15 @@ class NoteOut(BaseModel):
 class NoteListOut(BaseModel):
     items: list[NoteOut]
     next_cursor: str | None = None
+
+class SearchResultOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    title: str
+    rank: float
+    headline: str
+
+class SearchListOut(BaseModel):
+    items: list[SearchResultOut]
+    next_cursor: str | None = None

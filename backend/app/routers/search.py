@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from app.models.note import Note
 from app.dependencies import get_current_user
 from app.schemas import SearchListOut
-from sqlalchemy import select, tuple_, func
+from sqlalchemy import select, tuple_, func, cast, Float
 from app.database import get_db
 import json, base64
 
@@ -17,12 +17,12 @@ def get_search_list(
     db = Depends(get_db)):
         
         tsq = func.websearch_to_tsquery('english', q)
-        rank_expr = func.ts_rank_cd(Note.tsv, tsq, 1) 
+        rank_expr = cast(func.ts_rank_cd(Note.tsv, tsq, 1), Float)
         stmt = select(
             Note.id,
             Note.title, 
             rank_expr.label('rank'),
-            func.ts_headline('english', Note.body, tsq).label('headline')
+            func.ts_headline('english', Note.body, tsq, 'StartSel=<mark>, StopSel=</mark>').label('headline')
         )
 
         stmt = stmt.where(Note.user_id == current_user.id).where(Note.tsv.op('@@')(tsq))

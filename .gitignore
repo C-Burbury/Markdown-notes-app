@@ -9,3 +9,6 @@
 
 # Packages
 __pycache__
+
+#Personal scripts
+scripts/

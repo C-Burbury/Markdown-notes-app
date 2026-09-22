@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from './AuthContext'
-import {apiFetch, ApiError} from './api'
+import {apiFetch, describeError} from './api'
 import type {Token} from './types'
 
 export default function Login() {
@@ -19,12 +19,8 @@ export default function Login() {
              const result = await apiFetch<Token>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
              login(result.access_token);
              navigate('/notes');
-        } catch (err){
-            if (err instanceof ApiError) {
-                setError(err.detail);
-            } else {
-                setError("Something went wrong");
-            }
+        } catch (err) {
+            setError(describeError(err));
         }
     }
     

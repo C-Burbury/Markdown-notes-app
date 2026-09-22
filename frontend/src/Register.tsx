@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from './AuthContext'
-import {apiFetch, ApiError} from './api'
+import {apiFetch, describeError} from './api'
 import type {Token, UserOut} from './types'
 
 export default function Register() {
@@ -21,11 +21,7 @@ export default function Register() {
              login(result.access_token); 
              navigate('/notes');
         } catch (err){
-            if (err instanceof ApiError) {
-                setError(err.detail);
-            } else {
-                setError("Something went wrong");
-            }
+            setError(describeError(err));
         }
     }
 

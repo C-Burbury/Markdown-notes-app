@@ -42,3 +42,9 @@ export async function apiFetch<T>(path: string, opts?: RequestInit){
         const result = await response.json();
         return result as T;
 }
+
+export function describeError(err: unknown): string {
+    if (err instanceof ApiError) return err.detail;
+    if (err instanceof TypeError) return "Server unreachable. Try again.";
+    return "Something went wrong";
+}

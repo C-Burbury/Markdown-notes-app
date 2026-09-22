@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Link} from 'react-router-dom'
-import {apiFetch, ApiError} from './api'
+import {apiFetch, ApiError, describeError} from './api'
 import type {NoteListOut} from './types'
 
 export default function NoteList() {
@@ -19,7 +19,7 @@ export default function NoteList() {
             setItems(prev => nextCursor ? [...prev, ...result.items] : result.items);
             setCursor(result.next_cursor);
         } catch (err) {
-            setError(err instanceof ApiError ? err.detail : "Something went wrong");
+            setError(describeError(err));
         } finally {
             if (nextCursor) setLoadingMore(false); else setLoading(false);
         }

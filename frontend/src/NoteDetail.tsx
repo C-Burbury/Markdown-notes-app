@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import {apiFetch, ApiError} from './api'
+import {apiFetch, describeError} from './api'
 import type {NoteOut, TagOut} from './types'
 
 export default function NoteDetail() {
@@ -21,7 +21,7 @@ export default function NoteDetail() {
         setError(null);
         apiFetch<NoteOut>(`/notes/${id}`)
             .then(setNote)
-            .catch(err => setError(err instanceof ApiError ? err.detail : "Something went wrong"));
+            .catch(err => setError(describeError(err)));
     }, [id]);
 
     async function deleteHandler() {
@@ -33,13 +33,7 @@ export default function NoteDetail() {
             await apiFetch<void>(`/notes/${id}`, {method: 'DELETE'});
             navigate(`/notes`); 
         } catch (err) {
-            if (err instanceof ApiError) {
-                setDeleteError(err.detail);
-            } else if (err instanceof TypeError) {
-                setDeleteError("Server unreachable. Try again.");
-            } else {
-                setDeleteError("Something went wrong");
-            }
+            setDeleteError(describeError(err));
         } finally {
             setDeleting(false);
         }
@@ -49,8 +43,7 @@ export default function NoteDetail() {
         if (!id) return;
         apiFetch<TagOut[]>(`/notes/${id}/tags`)
             .then(setTags)
-            .catch(err => setTagsError(err instanceof ApiError ? err.detail : "Server unreachable. Try again."));
-
+            .catch(err => setTagsError(describeError(err)));
     }
 
     useEffect(fetchTags, [id]);
@@ -68,13 +61,7 @@ export default function NoteDetail() {
             setNewTagName("");
             fetchTags();
         } catch (err) {
-            if (err instanceof ApiError) {
-                setTagsError(err.detail);
-            } else if (err instanceof TypeError) {
-                setTagsError("Server unreachable. Try again.");
-            } else {
-                setTagsError("Something went wrong");
-            }
+            setTagsError(describeError(err));
         } finally {
             setAddingTag(false);
         }
@@ -86,13 +73,7 @@ export default function NoteDetail() {
             await apiFetch<void>(`/notes/${id}/tags/${tagId}`, {method: 'DELETE'});
             fetchTags();
         } catch (err) {
-            if (err instanceof ApiError) {
-                setTagsError(err.detail);
-            } else if (err instanceof TypeError) {
-                setTagsError("Server unreachable. Try again.");
-            } else {
-                setTagsError("Something went wrong");
-            }
+            setTagsError(describeError(err));
         }
     }
 

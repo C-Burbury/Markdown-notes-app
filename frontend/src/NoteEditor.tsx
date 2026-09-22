@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {apiFetch, ApiError} from './api'
+import {apiFetch, describeError} from './api'
 import type {NoteOut} from './types'
 import {useParams} from 'react-router-dom'
 
@@ -22,7 +22,7 @@ export default function NoteEditor() {
         if (!isEdit) return;
         apiFetch<NoteOut>(`/notes/${id}`)
             .then(note => { setTitle(note.title); setBody(note.body); setOriginalTitle(note.title); setOriginalBody(note.body); })
-            .catch(err => setLoadError(err instanceof ApiError ? err.detail : "Server unreachable. Try again."))
+            .catch(err => setLoadError(describeError(err)))
             .finally(() => setLoading(false));
     }, [id, isEdit]);
 
@@ -54,13 +54,7 @@ export default function NoteEditor() {
             }
             
         } catch (err) {
-            if (err instanceof ApiError) {
-                setError(err.detail);
-            } else if (err instanceof TypeError) {
-                setError("Server unreachable. Try again.");
-            } else {
-                setError("Something went wrong");
-            }
+            setError(describeError(err));
         } finally {
             setSubmitting(false)
         }

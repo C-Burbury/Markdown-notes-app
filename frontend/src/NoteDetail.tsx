@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import {apiFetch, ApiError} from './api'
-import type {NoteOut} from './types'
+import type {NoteOut, TagOut} from './types'
 
 export default function NoteDetail() {
     const {id} = useParams();
@@ -10,6 +10,10 @@ export default function NoteDetail() {
     const [error, setError] = useState<string | null>(null);
     const [deleteError, setDeleteError] = useState("");
     const [deleting, setDeleting] = useState(false);
+    const [tags, setTags] = useState<TagOut[]>([]);
+    const [tagsError, setTagsError] = useState("");
+    const [newTagName, setNewTagName] = useState("");
+    const [addingTag, setAddingTag] =useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -41,6 +45,57 @@ export default function NoteDetail() {
         }
     }
 
+    function fetchTags() {
+        if (!id) return;
+        apiFetch<TagOut[]>(`/notes/${id}/tags`)
+            .then(setTags)
+            .catch(err => setTagsError(err instanceof ApiError ? err.detail : "Server unreachable. Try again."));
+
+    }
+
+    useEffect(fetchTags, [id]);
+
+    async function tagHandler() {
+        if (addingTag) return;
+        if (!newTagName.trim()) return;
+        setTagsError("");
+        setAddingTag(true);
+        try {
+            await apiFetch<TagOut>(`/notes/${id}/tags`, {
+                method: 'POST',
+                body: JSON.stringify({name: newTagName})
+            });
+            setNewTagName("");
+            fetchTags();
+        } catch (err) {
+            if (err instanceof ApiError) {
+                setTagsError(err.detail);
+            } else if (err instanceof TypeError) {
+                setTagsError("Server unreachable. Try again.");
+            } else {
+                setTagsError("Something went wrong");
+            }
+        } finally {
+            setAddingTag(false);
+        }
+    }
+
+    async function detachTag(tagId: number) {
+        setTagsError("");
+        try {
+            await apiFetch<void>(`/notes/${id}/tags/${tagId}`, {method: 'DELETE'});
+            fetchTags();
+        } catch (err) {
+            if (err instanceof ApiError) {
+                setTagsError(err.detail);
+            } else if (err instanceof TypeError) {
+                setTagsError("Server unreachable. Try again.");
+            } else {
+                setTagsError("Something went wrong");
+            }
+        }
+    }
+
     if (error) 
         return <p>{error}</p>;
 
@@ -53,6 +108,15 @@ export default function NoteDetail() {
             <ReactMarkdown>{note.body}</ReactMarkdown>
             <button disabled={deleting} onClick={deleteHandler}>Delete</button>
             {deleteError && <p>{deleteError}</p>}
+            <ul>
+                {tags.map(tag => (
+                    <li key={tag.id}>{tag.name} <button onClick={() => detachTag(tag.id)}>x</button></li>
+                ))}
+            </ul>
+            <input value={newTagName} onChange={e => setNewTagName(e.target.value)} placeholder="New tag"/>
+            <button onClick={tagHandler} disabled={addingTag}>Add tag</button>
+            {tagsError && <p>{tagsError}</p>}
+
         </div>
     );
 }

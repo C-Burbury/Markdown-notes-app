@@ -6,8 +6,7 @@ import ProtectedRoute from './ProtectedRoute'
 import NoteList from './NoteList'
 import NoteEditor from './NoteEditor'
 import NoteDetail from './NoteDetail'
-
-
+import SearchScreen from './SearchScreen'
 
 function App() {
   return (
@@ -21,6 +20,7 @@ function App() {
             <Route path="/notes" element={<Notes/>}>
               <Route index element={<NoteList/>} />
               <Route path="new" element={<NoteEditor/>} />
+              <Route path="search" element={<SearchScreen/>} />
               <Route path=":id/edit" element={<NoteEditor/>} />
               <Route path=":id" element={<NoteDetail/>} />
           </Route>

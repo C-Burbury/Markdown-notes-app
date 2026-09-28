@@ -1,8 +1,59 @@
-import {useSearchParams} from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import {Link, useSearchParams} from 'react-router-dom'
+import {apiFetch, describeError} from './api'
+import type {SearchListOut} from './types'
+
 
 export default function SearchScreen() {
     const [params] = useSearchParams();
+    const q = params.get('q')
+
+    const [items, setItems] = useState<SearchListOut['items']>([]);
+    const [cursor, setCursor] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        setItems([]);
+        setCursor(null);
+        setError(null);
+        setLoading(false);
+        if (!q) return;
+
+        let ignore = false;
+        setLoading(true);
+
+        const load = async () => {
+            try {
+                const query = new URLSearchParams({q}).toString();
+                const result = await apiFetch<SearchListOut>(`/search/?${query}`);
+                if (ignore) return;
+                setItems(result.items);
+                setCursor(result.next_cursor);
+            } catch (err) {
+                if (!ignore) setError(describeError(err));
+            } finally {
+                if (!ignore) setLoading(false);
+            }
+        };
+
+        load();
+        return () => {ignore = true};
+    }, [q]);
+
+    if (!q) return <p>Enter a search.</p>;
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
+    if (items.length === 0) return <p>No results.</p>;
+
     return (
-        <div>q: {params.get('q')}</div>
-    );
+        <ul>
+            {items.map(r => (
+                <li key={r.id}>
+                    <Link to={`/notes/${r.id}`}>{r.title}</Link>
+                    <p>{r.headline}</p>
+                </li>
+            ))}
+        </ul>
+    )
 }

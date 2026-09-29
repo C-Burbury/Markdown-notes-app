@@ -3,6 +3,16 @@ import {Link, useSearchParams} from 'react-router-dom'
 import {apiFetch, describeError} from './api'
 import type {SearchListOut} from './types'
 
+function Headline({text}: {text: string}) {
+    const parts = text.split(/<mark>|<\/mark>/)
+    return (
+        <>
+            {parts.map((part, i) =>
+                i % 2 === 1 ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>
+            )}
+        </>
+    )
+}
 
 export default function SearchScreen() {
     const [params] = useSearchParams();
@@ -51,7 +61,7 @@ export default function SearchScreen() {
             {items.map(r => (
                 <li key={r.id}>
                     <Link to={`/notes/${r.id}`}>{r.title}</Link>
-                    <p>{r.headline}</p>
+                    <p><Headline text={r.headline}/></p>
                 </li>
             ))}
         </ul>

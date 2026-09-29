@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Link} from 'react-router-dom'
-import {apiFetch, ApiError, describeError} from './api'
+import {apiFetch, describeError} from './api'
 import type {NoteListOut} from './types'
 
 export default function NoteList() {

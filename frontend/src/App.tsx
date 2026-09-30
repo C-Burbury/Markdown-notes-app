@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
+import {BrowserRouter, Routes, Route, Navigate, useParams} from 'react-router-dom'
 import Login from './Login'
 import Register from './Register'
 import Notes from './Notes'
@@ -7,6 +7,11 @@ import NoteList from './NoteList'
 import NoteEditor from './NoteEditor'
 import NoteDetail from './NoteDetail'
 import SearchScreen from './SearchScreen'
+
+function EditNoteEditor() {
+  const {id} = useParams();
+  return <NoteEditor key={id}/>
+}
 
 function App() {
   return (
@@ -19,9 +24,9 @@ function App() {
           
             <Route path="/notes" element={<Notes/>}>
               <Route index element={<NoteList/>} />
-              <Route path="new" element={<NoteEditor/>} />
+              <Route path="new" element={<NoteEditor key="new"/>} />
               <Route path="search" element={<SearchScreen/>} />
-              <Route path=":id/edit" element={<NoteEditor/>} />
+              <Route path=":id/edit" element={<EditNoteEditor/>} />
               <Route path=":id" element={<NoteDetail/>} />
           </Route>
         </Route>

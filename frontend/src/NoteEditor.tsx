@@ -70,10 +70,15 @@ export default function NoteEditor() {
 
     return (
         <div>
-            <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title"/>
-            <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Body (markdown)"/>
+            <div>
+                <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title"/>
+            </div>
+            <div>
+                <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Body (markdown)"/>
+            </div>
+            <div>
             <button onClick={submitHandler} disabled={submitting}>Save</button>
-            {error && <p>{error}</p>}
+            </div>{error && <p>{error}</p>}
         </div>
     );
 }

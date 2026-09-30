@@ -18,6 +18,8 @@ export default function Notes() {
     return (
         <div>Notes Page (placeholder)
             <button onClick={logout}>Logout</button>
+            <button onClick={() => navigate('/notes')}>All notes</button>
+        <button onClick={() => navigate('/notes/new')}>New note</button>
             <form onSubmit={submit}>
                 <input value={text} onChange={e => setText(e.target.value)} />
                 <button type="submit">Search</button>

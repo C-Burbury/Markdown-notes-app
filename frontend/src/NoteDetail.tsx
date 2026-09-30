@@ -87,6 +87,7 @@ export default function NoteDetail() {
         <div>
             <h2>{note.title}</h2>
             <ReactMarkdown>{note.body}</ReactMarkdown>
+            <button onClick={() => navigate(`/notes/${id}/edit`)}>Edit</button>
             <button disabled={deleting} onClick={deleteHandler}>Delete</button>
             {deleteError && <p>{deleteError}</p>}
             <ul>

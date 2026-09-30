@@ -17,5 +17,6 @@ class Settings(BaseSettings):
     DATABASE_URL: PostgresDsn
     JWT_SECRET: str = Field(min_length=32)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    CORS_ORIGINS: list[str] = ["http://localhost:5173"]
 
 settings = Settings()

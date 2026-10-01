@@ -1,0 +1,22 @@
+# Environment variables
+.env
+.env.*
+
+#Virtual Environment
+.venv
+
+#IDE settings
+.vscode
+
+# Packages
+**/__pycache__
+**/*.pyc
+
+#Personal scripts
+scripts/
+
+# Tests
+tests
+.pytest_cache
+.ruff_cache
+.mypy_cache

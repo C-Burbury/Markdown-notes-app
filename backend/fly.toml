@@ -29,3 +29,4 @@ primary_region = 'iad'
 
 [env]
   ACCESS_TOKEN_EXPIRE_MINUTES = '30'
+  CORS_ORIGINS = '["https://markdown-notes-app-swart.vercel.app"]'

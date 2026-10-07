@@ -1,7 +1,6 @@
 # Environment variables
 .env
-.env.docker
-.env.neon
+.env.*
 
 #Virtual Environment
 .venv
@@ -10,7 +9,14 @@
 .vscode
 
 # Packages
-__pycache__
+**/__pycache__
+**/*.pyc
 
 #Personal scripts
 scripts/
+
+# Tests
+tests
+.pytest_cache
+.ruff_cache
+.mypy_cache

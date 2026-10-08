@@ -15,7 +15,7 @@ export default function NoteList() {
         if (nextCursor) setLoadingMore(true); else setLoading(true);
         try {
             const query = nextCursor ? `?cursor=${encodeURIComponent(nextCursor)}` : '';
-            const result = await apiFetch<NoteListOut>(`/notes${query}`);
+            const result = await apiFetch<NoteListOut>(`/notes/${query}`);
             setItems(prev => nextCursor ? [...prev, ...result.items] : result.items);
             setCursor(result.next_cursor);
         } catch (err) {

@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, Link} from 'react-router-dom'
 import {useAuth} from './AuthContext'
 import {apiFetch, describeError} from './api'
 import type {Token, UserOut} from './types'
@@ -34,6 +34,7 @@ export default function Register() {
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email"/>
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"/>
             <button onClick={submitHandler}> Submit</button>
+            <p>Already have an account? <Link to="/login">Log in</Link></p>
             {error && <p>{error}</p>}
         </div>
     );

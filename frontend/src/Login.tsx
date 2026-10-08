@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, Link} from 'react-router-dom'
 import {useAuth} from './AuthContext'
 import {apiFetch, describeError} from './api'
 import type {Token} from './types'
@@ -29,6 +29,7 @@ export default function Login() {
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email"/>
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"/>
             <button onClick={submitHandler}> Submit</button>
+            <p>Don't have an account? <Link to="/register">Sign up</Link></p>
             {error && <p>{error}</p>}
         </div>
     );

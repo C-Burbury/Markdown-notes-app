@@ -14,12 +14,16 @@ export default function Register() {
 
     async function submitHandler() {
         setError(null);
+        if (password.length < 8) {
+            setError("Password must be at least 8 characters");
+            return;
+        }
 
         try {
             await apiFetch<UserOut>('/auth/register', { method: 'POST', body: JSON.stringify({ email, password }) });
-             const result = await apiFetch<Token>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
-             login(result.access_token); 
-             navigate('/notes');
+            const result = await apiFetch<Token>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
+            login(result.access_token); 
+            navigate('/notes');
         } catch (err){
             setError(describeError(err));
         }

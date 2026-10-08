@@ -25,7 +25,14 @@ export async function apiFetch<T>(path: string, opts?: RequestInit){
             const raw = await response.text();
             let detail: string;
             try {
-                detail = JSON.parse(raw).detail ?? raw;
+                const parsed: unknown = JSON.parse(raw).detail;
+                if (typeof parsed === 'string') {
+                    detail = parsed;
+                } else if (Array.isArray(parsed)) {
+                    detail = parsed.map(e => e.msg).join('. ');
+                } else {
+                    detail = `Request failed (${response.status})`;
+                }
             } catch {
                 detail = raw;
             }

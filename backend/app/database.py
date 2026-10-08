@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 url_string = str(settings.DATABASE_URL)
 
-engine = create_engine(url_string)
+engine = create_engine(url_string, pool_pre_ping=True)
 
 class Base(DeclarativeBase):
     pass

@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react'
-import {Link} from 'react-router-dom'
+import {useEffect, useState, useRef} from 'react'
+import {Link, useSearchParams} from 'react-router-dom'
 import {apiFetch, describeError} from './api'
 import type {NoteListOut} from './types'
 
@@ -9,23 +9,39 @@ export default function NoteList() {
     const [error, setError] = useState<string | null>(null);
     const [loadingMore, setLoadingMore] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [searchParams] = useSearchParams();
+    const tag = searchParams.get('tag');
+    const tagRef = useRef(tag);
+    tagRef.current = tag;
 
     async function load(nextCursor?: string | null) {
+        const requestTag = tag;
         setError(null);
         if (nextCursor) setLoadingMore(true); else setLoading(true);
         try {
-            const query = nextCursor ? `?cursor=${encodeURIComponent(nextCursor)}` : '';
-            const result = await apiFetch<NoteListOut>(`/notes/${query}`);
+            const params = new URLSearchParams();
+            if (requestTag) params.set('tag', requestTag);
+            if (nextCursor) params.set('cursor', nextCursor);
+            const qs = params.toString();
+            const result = await apiFetch<NoteListOut>(`/notes/${qs ? `?${qs}` : ''}`);
+            if (tagRef.current !== requestTag) return;
             setItems(prev => nextCursor ? [...prev, ...result.items] : result.items);
             setCursor(result.next_cursor);
         } catch (err) {
-            setError(describeError(err));
+            if (tagRef.current === requestTag) setError(describeError(err));
         } finally {
-            if (nextCursor) setLoadingMore(false); else setLoading(false);
+            if (tagRef.current === requestTag) {
+                if (nextCursor) setLoadingMore(false); else setLoading(false);
+            }
         }
     }
 
-    useEffect(() => { load(); }, [])
+    useEffect(() => {
+        setItems([]);
+        setCursor(null);
+        setLoadingMore(false);
+        load();
+    }, [tag]);
 
     if (loading && items.length === 0) 
         return <p>Loading...</p>;
@@ -33,11 +49,16 @@ export default function NoteList() {
     if (error && items.length === 0) 
         return <p>{error}</p>;
 
-    if (items.length === 0) 
-        return <p>No notes yet.</p>;
-    
+    if (items.length === 0)
+        return tag
+            ? <p>No notes tagged <strong>{tag}</strong>. <Link to="/notes">Clear</Link></p>
+            : <p>No notes yet.</p>;
+
     return (
         <div>
+            {tag && (
+                <p>Filtered by: <strong>{tag}</strong> <Link to="/notes">Clear</Link></p>
+            )}
             <ul>
                 {items.map(note => (
                     <li key={note.id}>

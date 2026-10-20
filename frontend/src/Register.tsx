@@ -30,12 +30,15 @@ export default function Register() {
     }
 
     return (
-        <div>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email"/>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"/>
-            <button onClick={submitHandler}> Submit</button>
-            <p>Already have an account? <Link to="/login">Log in</Link></p>
-            {error && <p>{error}</p>}
+        <div className="auth-page">
+            <div className="auth">
+                <h1>Sign up</h1>
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" aria-label="Email"/>
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" aria-label="Password"/>
+                <button onClick={submitHandler}>Submit</button>
+                {error && <p className="error" role="alert">{error}</p>}
+                <p>Already have an account? <Link to="/login">Log in</Link></p>
+            </div>
         </div>
     );
 }

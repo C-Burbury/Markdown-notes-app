@@ -2,3 +2,91 @@
   box-sizing: border-box;
   margin: 0;
 }
+
+:root {
+  --fg: #5f7356 ;
+  --bg: #1a181d;
+  --sage:  rgb(155 172 146 / 0.40);
+  --teal:  rgb(72 145 140 / 0.35);
+  --plum:  rgb(128 84 140 / 0.35);
+  --amber: rgb(214 162 92 / 0.30);
+  --slate: rgb(86 110 160 / 0.35);
+  --rose:  rgb(196 110 120 / 0.30);
+  --faint: rgb(155 172 146 / 0.12);
+}
+
+.auth-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background-color: var(--bg);
+  background-image:
+    /* top-left circles */
+    radial-gradient(circle at 8% 12%,  var(--sage)  0 200px, transparent 201px),
+    radial-gradient(circle at 20% 28%, var(--teal)  0 130px, transparent 131px),
+    radial-gradient(circle at 3% 40%,  var(--plum)  0 90px,  transparent 91px),
+
+    /* top-right circles */
+    radial-gradient(circle at 85% 10%, var(--amber) 0 150px, transparent 151px),
+    radial-gradient(circle at 95% 25%, var(--rose)  0 110px, transparent 111px),
+    radial-gradient(circle at 72% 6%,  var(--slate) 0 70px,  transparent 71px),
+
+    /* bottom-right circles */
+    radial-gradient(circle at 92% 88%, var(--slate) 0 280px, transparent 281px),
+    radial-gradient(circle at 75% 95%, var(--teal)  0 150px, transparent 151px),
+    radial-gradient(circle at 85% 65%, var(--plum)  0 80px,  transparent 81px),
+
+    /* bottom-left circles */
+    radial-gradient(circle at 15% 92%, var(--rose)  0 170px, transparent 171px),
+    radial-gradient(circle at 30% 80%, var(--amber) 0 90px,  transparent 91px),
+
+    /* scattered accents */
+    radial-gradient(circle at 50% 8%,  var(--teal)  0 40px,  transparent 41px),
+    radial-gradient(circle at 60% 55%, var(--faint) 0 120px, transparent 121px),
+    radial-gradient(circle at 40% 60%, var(--plum)  0 50px,  transparent 51px),
+    radial-gradient(circle at 5% 70%,  var(--slate) 0 35px,  transparent 36px),
+    radial-gradient(circle at 38% 38%, var(--amber) 0 110px, transparent 111px),
+    radial-gradient(circle at 63% 35%, var(--rose)  0 75px,  transparent 76px),
+    radial-gradient(circle at 52% 70%, var(--teal)  0 95px,  transparent 96px);
+  background-attachment: fixed;
+}
+
+.auth {
+  max-width: 360px;
+  padding: 2rem;
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: center;
+}
+
+.auth input,
+.auth button {
+  padding: 0.75rem 1rem;
+  font: inherit;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #c9c9c9;
+}
+
+.auth button {
+  background: var(--fg);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.auth button:hover {
+  background: #2e2a33;
+}
+
+.error {
+  color: #c0392b;
+  font-size: 0.9rem;
+}

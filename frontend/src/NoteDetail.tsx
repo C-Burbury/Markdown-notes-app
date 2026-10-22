@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {useParams, useNavigate} from 'react-router-dom'
+import {useParams, useNavigate, Link, createSearchParams} from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import {apiFetch, describeError} from './api'
 import type {NoteOut, TagOut} from './types'
@@ -92,7 +92,10 @@ export default function NoteDetail() {
             {deleteError && <p>{deleteError}</p>}
             <ul>
                 {tags.map(tag => (
-                    <li key={tag.id}>{tag.name} <button onClick={() => detachTag(tag.id)}>x</button></li>
+                    <li key={tag.id}>
+                        <Link to={{pathname: '/notes', search: createSearchParams({tag: tag.name}).toString()}}>{tag.name}</Link>
+                        {' '}<button onClick={() => detachTag(tag.id)}>x</button>
+                    </li>
                 ))}
             </ul>
             <input value={newTagName} onChange={e => setNewTagName(e.target.value)} placeholder="New tag"/>

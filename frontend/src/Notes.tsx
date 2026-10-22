@@ -16,12 +16,13 @@ export default function Notes() {
     }
 
     return (
-        <div>Notes Page (placeholder)
+        <div>
+            <h1>Markdown Notes</h1>
             <button onClick={logout}>Logout</button>
             <button onClick={() => navigate('/notes')}>All notes</button>
-        <button onClick={() => navigate('/notes/new')}>New note</button>
+            <button onClick={() => navigate('/notes/new')}>New note</button>
             <form onSubmit={submit}>
-                <input value={text} onChange={e => setText(e.target.value)} />
+                <input value={text} onChange={e => setText(e.target.value)} placeholder ="Search notes..." aria-label="Search notes..."/>
                 <button type="submit">Search</button>
             </form>
             <Outlet/>

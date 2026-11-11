@@ -33,9 +33,15 @@ export default function Register() {
         <div className="auth-page">
             <div className="auth">
                 <h1>Sign up</h1>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" aria-label="Email"/>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" aria-label="Password"/>
-                <button onClick={submitHandler}>Submit</button>
+                <div className="field">
+                    <label htmlFor="NewEmail">Email</label>
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" id="NewEmail"/>
+                </div>
+                <div className="field">
+                    <label htmlFor="NewPassword">Password</label>
+                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="At least 8 characters" autoComplete="new-password" id="NewPassword"/>
+                </div>
+                <button onClick={submitHandler}>Sign up</button>
                 {error && <p className="error" role="alert">{error}</p>}
                 <p>Already have an account? <Link to="/login">Log in</Link></p>
             </div>

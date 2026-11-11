@@ -28,9 +28,15 @@ export default function Login() {
         <div className="auth-page">
             <div className="auth">
                 <h1>Log in</h1>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" aria-label="Email"/>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" aria-label="Password"/>
-                <button onClick={submitHandler}>Submit</button>
+                <div className="field">
+                    <label htmlFor="LoginEmail">Email</label>
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" id="LoginEmail"/>
+                </div>
+                <div className="field">
+                    <label htmlFor="LoginPassword">Password</label>
+                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" id="LoginPassword"/>
+                </div>
+                <button onClick={submitHandler}>Log in</button>
                 {error && <p className="error" role="alert">{error}</p>}
                 <p>Don't have an account? <Link to="/register">Sign up</Link></p>
             </div>

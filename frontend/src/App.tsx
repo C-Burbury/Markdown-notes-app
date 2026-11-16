@@ -1,16 +1,20 @@
-import {BrowserRouter, Routes, Route, Navigate, useParams} from 'react-router-dom'
+import {BrowserRouter, Routes, Route, Navigate, useParams, useLocation} from 'react-router-dom'
 import Login from './Login'
 import Register from './Register'
 import Notes from './Notes'
 import ProtectedRoute from './ProtectedRoute'
-import NoteList from './NoteList'
 import NoteEditor from './NoteEditor'
 import NoteDetail from './NoteDetail'
-import SearchScreen from './SearchScreen'
+import EmptyPane from './EmptyPane'
 
 function EditNoteEditor() {
   const {id} = useParams();
   return <NoteEditor key={id}/>
+}
+
+function SearchRedirect() {
+  const {search} = useLocation();
+  return <Navigate to={{pathname: '/notes', search}} replace />;
 }
 
 function App() {
@@ -23,9 +27,9 @@ function App() {
         <Route element={<ProtectedRoute/>}>
           
             <Route path="/notes" element={<Notes/>}>
-              <Route index element={<NoteList/>} />
+              <Route index element={<EmptyPane/>} />
               <Route path="new" element={<NoteEditor key="new"/>} />
-              <Route path="search" element={<SearchScreen/>} />
+              <Route path="search" element={<SearchRedirect/>} />
               <Route path=":id/edit" element={<EditNoteEditor/>} />
               <Route path=":id" element={<NoteDetail/>} />
           </Route>

@@ -97,3 +97,7 @@
   gap: 0.25rem;
   text-align: left;
 }
+
+nav a.active {
+  font-weight: 700;
+}

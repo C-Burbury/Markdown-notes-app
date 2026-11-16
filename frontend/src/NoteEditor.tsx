@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useLocation} from 'react-router-dom'
 import {apiFetch, describeError} from './api'
 import type {NoteOut} from './types'
 import {useParams} from 'react-router-dom'
@@ -13,7 +13,7 @@ export default function NoteEditor() {
     const [originalTitle, setOriginalTitle] = useState("");
     const [originalBody, setOriginalBody] = useState("");
     const navigate = useNavigate();
-
+    const {search} = useLocation();
     const {id} = useParams();
     const isEdit = Boolean(id);
     const [loading, setLoading] = useState(isEdit);
@@ -37,20 +37,20 @@ export default function NoteEditor() {
                 if (title !== originalTitle) edits.title = title;
                 if (body !== originalBody) edits.body = body;
                 if (Object.keys(edits).length === 0) {
-                    navigate(`/notes/${id}`); 
+                    navigate({pathname: `/notes/${id}`, search}); 
                     return;
                 }
                 const note = await apiFetch<NoteOut>(`/notes/${id}`, {
                     method: 'PATCH',
                     body: JSON.stringify({...edits})
                 });
-                navigate(`/notes/${note.id}`);
+                navigate({pathname: `/notes/${note.id}`, search});
             } else {
                 const note = await apiFetch<NoteOut>('/notes/', {
                     method: 'POST',
                     body: JSON.stringify({title, body})
                 });
-                navigate(`/notes/${note.id}`);
+                navigate({pathname: `/notes/${note.id}`, search});
             }
             
         } catch (err) {

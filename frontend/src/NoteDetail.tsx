@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {useParams, useNavigate, Link, createSearchParams} from 'react-router-dom'
+import {useParams, useNavigate, Link, createSearchParams, useLocation} from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import {apiFetch, describeError} from './api'
 import type {NoteOut, TagOut} from './types'
@@ -14,6 +14,7 @@ export default function NoteDetail() {
     const [tagsError, setTagsError] = useState("");
     const [newTagName, setNewTagName] = useState("");
     const [addingTag, setAddingTag] =useState(false);
+    const {search} = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,7 +32,7 @@ export default function NoteDetail() {
         setDeleting(true);
         try {
             await apiFetch<void>(`/notes/${id}`, {method: 'DELETE'});
-            navigate(`/notes`); 
+            navigate({pathname: '/notes', search})
         } catch (err) {
             setDeleteError(describeError(err));
         } finally {
@@ -87,7 +88,7 @@ export default function NoteDetail() {
         <div>
             <h2>{note.title}</h2>
             <ReactMarkdown>{note.body}</ReactMarkdown>
-            <button onClick={() => navigate(`/notes/${id}/edit`)}>Edit</button>
+            <button onClick={() => navigate({pathname: `/notes/${id}/edit`, search})}>Edit</button>
             <button disabled={deleting} onClick={deleteHandler}>Delete</button>
             {deleteError && <p>{deleteError}</p>}
             <ul>

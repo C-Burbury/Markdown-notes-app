@@ -1,5 +1,5 @@
 import {useAuth} from './AuthContext'
-import {Outlet, useNavigate, createSearchParams, useSearchParams} from 'react-router-dom'
+import {Outlet, useNavigate, createSearchParams, useSearchParams, useLocation} from 'react-router-dom'
 import {useState} from 'react'
 import type {SubmitEvent} from 'react'
 import NoteList from "./NoteList"
@@ -11,6 +11,7 @@ export default function Notes() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
     const query = searchParams.get('q')
+    const {search} = useLocation();
 
     const submit = (e: SubmitEvent) => {
         e.preventDefault();
@@ -26,7 +27,7 @@ export default function Notes() {
                 <h1>Markdown Notes</h1>
                 <button onClick={logout}>Logout</button>
                 <button onClick={() => navigate('/notes')}>All notes</button>
-                <button onClick={() => navigate('/notes/new')}>New note</button>
+                <button onClick={() => navigate({pathname: '/notes/new', search})}>New note</button>
                 <form onSubmit={submit}>
                     <input value={text} onChange={e => setText(e.target.value)} placeholder ="Search notes..." aria-label="Search notes..."/>
                     <button type="submit">Search</button>

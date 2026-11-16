@@ -1,5 +1,5 @@
 import {useEffect, useState, useRef} from 'react'
-import {Link, useSearchParams} from 'react-router-dom'
+import {Link, useSearchParams, NavLink, useLocation} from 'react-router-dom'
 import {apiFetch, describeError} from './api'
 import type {NoteListOut} from './types'
 
@@ -10,6 +10,7 @@ export default function NoteList() {
     const [loadingMore, setLoadingMore] = useState(false);
     const [loading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
+    const {search} = useLocation();
     const tag = searchParams.get('tag');
     const tagRef = useRef(tag);
     tagRef.current = tag;
@@ -62,7 +63,7 @@ export default function NoteList() {
             <ul>
                 {items.map(note => (
                     <li key={note.id}>
-                        <Link to={`/notes/${note.id}`}>{note.title}</Link>
+                        <NavLink to={{pathname: `/notes/${note.id}`, search}}>{note.title}</NavLink>
                     </li>
                 ))}
             </ul>

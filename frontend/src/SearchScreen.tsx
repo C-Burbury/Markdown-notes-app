@@ -1,5 +1,5 @@
 import {useEffect, useState, useRef} from 'react'
-import {Link, useSearchParams} from 'react-router-dom'
+import {useSearchParams, NavLink, useLocation} from 'react-router-dom'
 import {apiFetch, describeError} from './api'
 import type {SearchListOut} from './types'
 
@@ -24,6 +24,7 @@ export default function SearchScreen() {
     const [error, setError] = useState<string | null>(null);
     const [loadingMore, setLoadingMore] = useState(false);
     const [loadMoreError, setLoadMoreError] = useState<string | null>(null);
+    const {search} = useLocation();
     const qRef = useRef(q);
     qRef.current = q;
 
@@ -85,7 +86,7 @@ export default function SearchScreen() {
             <ul>
                 {items.map(r => (
                     <li key={r.id}>
-                        <Link to={`/notes/${r.id}`}>{r.title}</Link>
+                        <NavLink to={{pathname: `/notes/${r.id}`, search}}>{r.title}</NavLink>
                         <p><Headline text={r.headline}/></p>
                     </li>
                 ))}

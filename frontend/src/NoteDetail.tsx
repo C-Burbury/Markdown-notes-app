@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useRef} from 'react'
 import {useParams, useNavigate, Link, createSearchParams, useLocation, useOutletContext} from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import {apiFetch, describeError} from './api'
@@ -14,6 +14,7 @@ export default function NoteDetail() {
     const [tagsError, setTagsError] = useState("");
     const [newTagName, setNewTagName] = useState("");
     const [addingTag, setAddingTag] =useState(false);
+    const headingRef = useRef<HTMLHeadingElement>(null);
     const {refresh} = useOutletContext<{refresh: () => void}>();
     const {search} = useLocation();
     const navigate = useNavigate();
@@ -50,6 +51,10 @@ export default function NoteDetail() {
     }
 
     useEffect(fetchTags, [id]);
+
+    useEffect(() => {
+        headingRef.current?.focus();
+    }, [note]);
 
     async function tagHandler() {
         if (addingTag) return;
@@ -90,7 +95,7 @@ export default function NoteDetail() {
 
     return (
         <div>
-            <h2>{note.title}</h2>
+            <h2 ref={headingRef} tabIndex={-1}>{note.title}</h2>
             <ReactMarkdown>{note.body}</ReactMarkdown>
             <button onClick={() => navigate({pathname: `/notes/${id}/edit`, search})}>Edit</button>
             <button disabled={deleting} onClick={deleteHandler}>Delete</button>

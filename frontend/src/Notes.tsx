@@ -1,6 +1,6 @@
 import {useAuth} from './AuthContext'
 import {Outlet, useNavigate, createSearchParams, useSearchParams, useLocation} from 'react-router-dom'
-import {useState} from 'react'
+import {useState, useCallback} from 'react'
 import type {SubmitEvent} from 'react'
 import NoteList from "./NoteList"
 import SearchScreen from "./SearchScreen"
@@ -11,7 +11,13 @@ export default function Notes() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
     const query = searchParams.get('q')
+    const [version, setVersion] = useState(0);
     const {search} = useLocation();
+
+    const refresh = useCallback(() => {
+        setVersion(v => v + 1);
+    }, []);
+
 
     const submit = (e: SubmitEvent) => {
         e.preventDefault();
@@ -35,9 +41,9 @@ export default function Notes() {
             </header>
             <div className="workspace">
                 <nav aria-label="Notes">
-                    {query ? <SearchScreen/> : <NoteList/>}
+                    {query ? <SearchScreen version={version}/> : <NoteList version={version}/>}
                 </nav>
-                <main><Outlet/></main>   
+                <main><Outlet context={{refresh}}/></main>   
             </div>
         </div>
     );

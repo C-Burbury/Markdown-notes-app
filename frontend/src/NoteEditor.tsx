@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import {useNavigate, useLocation} from 'react-router-dom'
+import {useNavigate, useLocation, useOutletContext} from 'react-router-dom'
 import {apiFetch, describeError} from './api'
 import type {NoteOut} from './types'
 import {useParams} from 'react-router-dom'
@@ -15,6 +15,7 @@ export default function NoteEditor() {
     const navigate = useNavigate();
     const {search} = useLocation();
     const {id} = useParams();
+    const {refresh} = useOutletContext<{refresh: () => void}>();
     const isEdit = Boolean(id);
     const [loading, setLoading] = useState(isEdit);
 
@@ -44,12 +45,14 @@ export default function NoteEditor() {
                     method: 'PATCH',
                     body: JSON.stringify({...edits})
                 });
+                refresh();
                 navigate({pathname: `/notes/${note.id}`, search});
             } else {
                 const note = await apiFetch<NoteOut>('/notes/', {
                     method: 'POST',
                     body: JSON.stringify({title, body})
                 });
+                refresh();
                 navigate({pathname: `/notes/${note.id}`, search});
             }
             

@@ -101,3 +101,50 @@
 nav a.active {
   font-weight: 700;
 }
+
+.workspace {
+  display: grid;
+  grid-template-columns: clamp(280px, 25vw, 360px) 1fr;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.workspace > nav {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100dvh;
+  overflow-y: auto;
+}
+
+.workspace > main {
+  min-width: 0;
+  max-width: 70ch;
+}
+
+.workspace nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.back-link {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace.detail-open > nav {
+    display: none;
+  }
+
+  .workspace:not(.detail-open) > main {
+    display: none;
+  }
+
+  .back-link {
+    display: inline-block;
+  }
+}

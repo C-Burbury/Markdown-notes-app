@@ -1,5 +1,5 @@
 import {useAuth} from './AuthContext'
-import {Outlet, useNavigate, createSearchParams, useSearchParams, useLocation} from 'react-router-dom'
+import {Outlet, useNavigate, createSearchParams, useSearchParams, useLocation, Link} from 'react-router-dom'
 import {useState, useCallback} from 'react'
 import type {SubmitEvent} from 'react'
 import NoteList from "./NoteList"
@@ -12,7 +12,8 @@ export default function Notes() {
     const [searchParams] = useSearchParams();
     const query = searchParams.get('q')
     const [version, setVersion] = useState(0);
-    const {search} = useLocation();
+    const {search, pathname} = useLocation();
+    const detailOpen = pathname !== '/notes';
 
     const refresh = useCallback(() => {
         setVersion(v => v + 1);
@@ -39,11 +40,14 @@ export default function Notes() {
                     <button type="submit">Search</button>
                 </form>
             </header>
-            <div className="workspace">
+            <div className={detailOpen ? 'workspace detail-open' : 'workspace'}>
                 <nav aria-label="Notes">
                     {query ? <SearchScreen version={version}/> : <NoteList version={version}/>}
                 </nav>
-                <main><Outlet context={{refresh}}/></main>   
+                <main>{detailOpen && 
+                    <Link className="back-link" to={{pathname: '/notes', search}}>Back to notes</Link>}
+                    <Outlet context={{refresh}}/>
+                </main>   
             </div>
         </div>
     );

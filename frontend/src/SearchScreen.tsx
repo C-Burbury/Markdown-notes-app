@@ -14,7 +14,7 @@ function Headline({text}: {text: string}) {
     )
 }
 
-export default function SearchScreen() {
+export default function SearchScreen({version}: {version: number}) {
     const [params] = useSearchParams();
     const q = params.get('q')
 
@@ -56,7 +56,7 @@ export default function SearchScreen() {
 
         load();
         return () => {ignore = true};
-    }, [q]);
+    }, [q, version]);
 
     async function loadMore() {
         if (!cursor || loadingMore) return;

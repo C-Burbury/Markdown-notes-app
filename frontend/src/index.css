@@ -148,3 +148,7 @@ nav a.active {
     display: inline-block;
   }
 }
+
+h2[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
+}

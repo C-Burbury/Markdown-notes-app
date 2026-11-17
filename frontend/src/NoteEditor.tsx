@@ -73,11 +73,12 @@ export default function NoteEditor() {
 
     return (
         <div>
+            <h2>{isEdit ? "Edit note" : "New note"}</h2>
             <div>
-                <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title"/>
+                <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" aria-label="Title"/>
             </div>
             <div>
-                <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Body (markdown)"/>
+                <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Body (markdown)" aria-label="Body"/>
             </div>
             <div>
             <button onClick={submitHandler} disabled={submitting}>Save</button>

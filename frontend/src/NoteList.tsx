@@ -3,7 +3,7 @@ import {Link, useSearchParams, NavLink, useLocation} from 'react-router-dom'
 import {apiFetch, describeError} from './api'
 import type {NoteListOut} from './types'
 
-export default function NoteList() {
+export default function NoteList({version}: {version: number}) {
     const [items, setItems] = useState<NoteListOut['items']>([]);
     const [cursor, setCursor] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -12,26 +12,26 @@ export default function NoteList() {
     const [searchParams] = useSearchParams();
     const {search} = useLocation();
     const tag = searchParams.get('tag');
-    const tagRef = useRef(tag);
-    tagRef.current = tag;
+    const keyRef = useRef(`${tag}|${version}`);
+    keyRef.current = `${tag}|${version}`;
 
     async function load(nextCursor?: string | null) {
-        const requestTag = tag;
+        const requestKey = `${tag}|${version}`;
         setError(null);
         if (nextCursor) setLoadingMore(true); else setLoading(true);
         try {
             const params = new URLSearchParams();
-            if (requestTag) params.set('tag', requestTag);
+            if (tag) params.set('tag', tag);
             if (nextCursor) params.set('cursor', nextCursor);
             const qs = params.toString();
             const result = await apiFetch<NoteListOut>(`/notes/${qs ? `?${qs}` : ''}`);
-            if (tagRef.current !== requestTag) return;
+            if (keyRef.current !== requestKey) return;
             setItems(prev => nextCursor ? [...prev, ...result.items] : result.items);
             setCursor(result.next_cursor);
         } catch (err) {
-            if (tagRef.current === requestTag) setError(describeError(err));
+            if (keyRef.current === requestKey) setError(describeError(err));
         } finally {
-            if (tagRef.current === requestTag) {
+            if (keyRef.current === requestKey) {
                 if (nextCursor) setLoadingMore(false); else setLoading(false);
             }
         }
@@ -42,7 +42,7 @@ export default function NoteList() {
         setCursor(null);
         setLoadingMore(false);
         load();
-    }, [tag]);
+    }, [tag, version]);
 
     if (loading && items.length === 0) 
         return <p>Loading...</p>;

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {useParams, useNavigate, Link, createSearchParams, useLocation} from 'react-router-dom'
+import {useParams, useNavigate, Link, createSearchParams, useLocation, useOutletContext} from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import {apiFetch, describeError} from './api'
 import type {NoteOut, TagOut} from './types'
@@ -14,6 +14,7 @@ export default function NoteDetail() {
     const [tagsError, setTagsError] = useState("");
     const [newTagName, setNewTagName] = useState("");
     const [addingTag, setAddingTag] =useState(false);
+    const {refresh} = useOutletContext<{refresh: () => void}>();
     const {search} = useLocation();
     const navigate = useNavigate();
 
@@ -32,6 +33,7 @@ export default function NoteDetail() {
         setDeleting(true);
         try {
             await apiFetch<void>(`/notes/${id}`, {method: 'DELETE'});
+            refresh();
             navigate({pathname: '/notes', search})
         } catch (err) {
             setDeleteError(describeError(err));
@@ -61,6 +63,7 @@ export default function NoteDetail() {
             });
             setNewTagName("");
             fetchTags();
+            refresh();
         } catch (err) {
             setTagsError(describeError(err));
         } finally {
@@ -73,6 +76,7 @@ export default function NoteDetail() {
         try {
             await apiFetch<void>(`/notes/${id}/tags/${tagId}`, {method: 'DELETE'});
             fetchTags();
+            refresh();
         } catch (err) {
             setTagsError(describeError(err));
         }

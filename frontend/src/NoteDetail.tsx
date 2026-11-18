@@ -1,4 +1,5 @@
 import {useEffect, useState, useRef} from 'react'
+import type {SubmitEvent} from 'react'
 import {useParams, useNavigate, Link, createSearchParams, useLocation, useOutletContext} from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import {apiFetch, describeError} from './api'
@@ -26,6 +27,8 @@ export default function NoteDetail() {
             .then(setNote)
             .catch(err => setError(describeError(err)));
     }, [id]);
+
+   
 
     async function deleteHandler() {
         if (deleting) return;
@@ -56,7 +59,8 @@ export default function NoteDetail() {
         headingRef.current?.focus();
     }, [note]);
 
-    async function tagHandler() {
+    async function tagHandler(e: SubmitEvent) {
+        e.preventDefault();
         if (addingTag) return;
         if (!newTagName.trim()) return;
         setTagsError("");
@@ -87,6 +91,10 @@ export default function NoteDetail() {
         }
     }
 
+    useEffect(() => {
+        headingRef.current?.focus();
+    }, [note]);
+
     if (error) 
         return <p>{error}</p>;
 
@@ -108,8 +116,8 @@ export default function NoteDetail() {
                     </li>
                 ))}
             </ul>
-            <input value={newTagName} onChange={e => setNewTagName(e.target.value)} placeholder="New tag"/>
-            <button onClick={tagHandler} disabled={addingTag}>Add tag</button>
+            <form onSubmit={tagHandler}><input value={newTagName} onChange={e => setNewTagName(e.target.value)} placeholder="New tag"/></form>
+            <button type="submit" disabled={addingTag}>Add tag</button>
             {tagsError && <p>{tagsError}</p>}
 
         </div>

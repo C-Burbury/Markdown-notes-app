@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import type {SubmitEvent} from 'react'
 import {useNavigate, useLocation, useOutletContext} from 'react-router-dom'
 import {apiFetch, describeError} from './api'
 import type {NoteOut} from './types'
@@ -27,7 +28,8 @@ export default function NoteEditor() {
             .finally(() => setLoading(false));
     }, [id, isEdit]);
 
-    async function submitHandler() {
+    async function submitHandler(e: SubmitEvent) {
+        e.preventDefault();
         if (submitting) return;
         if (!title.trim()) {setError("Title required"); return; }
         setError(null);
@@ -72,7 +74,7 @@ export default function NoteEditor() {
         return <p>{loadError}</p>
 
     return (
-        <div>
+        <form onSubmit={submitHandler}>
             <h2>{isEdit ? "Edit note" : "New note"}</h2>
             <div>
                 <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" aria-label="Title"/>
@@ -81,8 +83,8 @@ export default function NoteEditor() {
                 <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Body (markdown)" aria-label="Body"/>
             </div>
             <div>
-            <button onClick={submitHandler} disabled={submitting}>Save</button>
+            <button type="submit" disabled={submitting}>Save</button>
             </div>{error && <p>{error}</p>}
-        </div>
+        </form>
     );
 }

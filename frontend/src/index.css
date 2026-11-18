@@ -98,10 +98,6 @@
   text-align: left;
 }
 
-nav a.active {
-  font-weight: 700;
-}
-
 .workspace {
   display: grid;
   grid-template-columns: clamp(280px, 25vw, 360px) 1fr;
@@ -125,6 +121,9 @@ nav a.active {
 .workspace nav ul {
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .back-link {
@@ -151,4 +150,40 @@ nav a.active {
 
 h2[tabindex="-1"]:focus:not(:focus-visible) {
   outline: none;
+}
+
+.workspace nav a {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+}
+
+.workspace nav time {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.workspace nav a:hover {
+  background: #f2f4f0;
+  border-color: var(--fg);
+}
+
+.workspace nav a.active {
+  background: var(--fg);
+  color: #fff;
+  border-color: var(--fg);
+}
+
+.workspace nav a.active time {
+  color: #fff;
+}
+
+.workspace nav a:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
 }

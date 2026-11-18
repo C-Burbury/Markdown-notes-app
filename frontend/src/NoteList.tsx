@@ -63,7 +63,7 @@ export default function NoteList({version}: {version: number}) {
             <ul>
                 {items.map(note => (
                     <li key={note.id}>
-                        <NavLink to={{pathname: `/notes/${note.id}`, search}}>{note.title}</NavLink>
+                        <NavLink to={{pathname: `/notes/${note.id}`, search}}><span>{note.title}</span><time dateTime={note.updated_at}>{new Date(note.updated_at).toLocaleDateString()}</time></NavLink>
                     </li>
                 ))}
             </ul>

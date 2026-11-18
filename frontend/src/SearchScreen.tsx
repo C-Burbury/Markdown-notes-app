@@ -86,8 +86,10 @@ export default function SearchScreen({version}: {version: number}) {
             <ul>
                 {items.map(r => (
                     <li key={r.id}>
-                        <NavLink to={{pathname: `/notes/${r.id}`, search}}>{r.title}</NavLink>
-                        <p><Headline text={r.headline}/></p>
+                        <NavLink to={{pathname: `/notes/${r.id}`, search}}>{r.title}
+                            <span><Headline text={r.headline}/></span>
+                        </NavLink>
+                        
                     </li>
                 ))}
             </ul>

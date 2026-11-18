@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import type {SubmitEvent} from 'react'
 import {useNavigate, Link} from 'react-router-dom'
 import {useAuth} from './AuthContext'
 import {apiFetch, describeError} from './api'
@@ -12,7 +13,8 @@ export default function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    async function submitHandler() {
+    async function submitHandler(e: SubmitEvent) {
+        e.preventDefault();
         setError(null);
 
         try {
@@ -25,7 +27,7 @@ export default function Login() {
     }
     
     return (
-        <div className="auth-page">
+        <form className="auth-page" onSubmit={submitHandler}>
             <div className="auth">
                 <h1>Log in</h1>
                 <div className="field">
@@ -36,10 +38,10 @@ export default function Login() {
                     <label htmlFor="LoginPassword">Password</label>
                     <input type="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" id="LoginPassword"/>
                 </div>
-                <button onClick={submitHandler}>Log in</button>
+                <button type="submit">Log in</button>
                 {error && <p className="error" role="alert">{error}</p>}
                 <p>Don't have an account? <Link to="/register">Sign up</Link></p>
             </div>
-        </div>
+        </form>
     );
 }

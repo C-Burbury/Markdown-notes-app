@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import type {SubmitEvent} from 'react'
 import {useNavigate, Link} from 'react-router-dom'
 import {useAuth} from './AuthContext'
 import {apiFetch, describeError} from './api'
@@ -12,7 +13,8 @@ export default function Register() {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    async function submitHandler() {
+    async function submitHandler(e: SubmitEvent) {
+        e.preventDefault();
         setError(null);
         if (password.length < 8) {
             setError("Password must be at least 8 characters");
@@ -30,7 +32,7 @@ export default function Register() {
     }
 
     return (
-        <div className="auth-page">
+        <form className="auth-page" onSubmit={submitHandler}>
             <div className="auth">
                 <h1>Sign up</h1>
                 <div className="field">
@@ -41,10 +43,10 @@ export default function Register() {
                     <label htmlFor="NewPassword">Password</label>
                     <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="At least 8 characters" autoComplete="new-password" id="NewPassword"/>
                 </div>
-                <button onClick={submitHandler}>Sign up</button>
+                <button type="submit">Sign up</button>
                 {error && <p className="error" role="alert">{error}</p>}
                 <p>Already have an account? <Link to="/login">Log in</Link></p>
             </div>
-        </div>
+        </form>
     );
 }

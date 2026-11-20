@@ -74,7 +74,7 @@ export default function NoteEditor() {
         return <p>{loadError}</p>
 
     return (
-        <form onSubmit={submitHandler}>
+        <form className="editor" onSubmit={submitHandler}>
             <h2>{isEdit ? "Edit note" : "New note"}</h2>
             <div>
                 <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" aria-label="Title"/>
@@ -83,8 +83,8 @@ export default function NoteEditor() {
                 <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Body (markdown)" aria-label="Body"/>
             </div>
             <div>
-            <button type="submit" disabled={submitting}>Save</button>
-            </div>{error && <p>{error}</p>}
+            <button className="primary" type="submit" disabled={submitting}>Save</button>
+            </div>{error && <p className="error">{error}</p>}
         </form>
     );
 }

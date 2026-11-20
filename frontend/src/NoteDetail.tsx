@@ -105,10 +105,12 @@ export default function NoteDetail() {
         <div>
             <h2 ref={headingRef} tabIndex={-1}>{note.title}</h2>
             <ReactMarkdown>{note.body}</ReactMarkdown>
-            <button onClick={() => navigate({pathname: `/notes/${id}/edit`, search})}>Edit</button>
-            <button disabled={deleting} onClick={deleteHandler}>Delete</button>
+            <div className="actions">
+                <button onClick={() => navigate({pathname: `/notes/${id}/edit`, search})}>Edit</button>
+                <button disabled={deleting} onClick={deleteHandler} className="danger">Delete</button>
+            </div>
             {deleteError && <p>{deleteError}</p>}
-            <ul>
+            <ul className="tags">
                 {tags.map(tag => (
                     <li key={tag.id}>
                         <Link to={{pathname: '/notes', search: createSearchParams({tag: tag.name}).toString()}}>{tag.name}</Link>
@@ -116,9 +118,11 @@ export default function NoteDetail() {
                     </li>
                 ))}
             </ul>
-            <form onSubmit={tagHandler}><input value={newTagName} onChange={e => setNewTagName(e.target.value)} placeholder="New tag"/></form>
-            <button type="submit" disabled={addingTag}>Add tag</button>
-            {tagsError && <p>{tagsError}</p>}
+            <form onSubmit={tagHandler} className="tag-form">
+                <input value={newTagName} onChange={e => setNewTagName(e.target.value)} placeholder="New tag"/>
+                <button type="submit" disabled={addingTag}>Add tag</button>
+            </form>
+            {tagsError && <p className="error">{tagsError}</p>}
 
         </div>
     );

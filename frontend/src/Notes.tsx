@@ -29,16 +29,18 @@ export default function Notes() {
         
 
     return (
-        <div>
+        <div className="app">
             <header>
                 <h1>Markdown Notes</h1>
-                <button onClick={logout}>Logout</button>
-                <button onClick={() => navigate('/notes')}>All notes</button>
-                <button onClick={() => navigate({pathname: '/notes/new', search})}>New note</button>
                 <form onSubmit={submit}>
                     <input value={text} onChange={e => setText(e.target.value)} placeholder ="Search notes..." aria-label="Search notes..."/>
                     <button type="submit">Search</button>
                 </form>
+                <div className="header-actions">
+                    <button onClick={logout}>Logout</button>
+                    <button onClick={() => navigate('/notes')}>All notes</button>
+                    <button className="primary" onClick={() => navigate({pathname: '/notes/new', search})}>New note</button>
+                </div>
             </header>
             <div className={detailOpen ? 'workspace detail-open' : 'workspace'}>
                 <nav aria-label="Notes">

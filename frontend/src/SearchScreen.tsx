@@ -94,7 +94,7 @@ export default function SearchScreen({version}: {version: number}) {
                 ))}
             </ul>
             {loadMoreError && <p>{loadMoreError}</p>}
-            {cursor && <button onClick={loadMore} disabled={loadingMore}>Load more</button>}
+            {cursor && <button className="primary load-more" onClick={loadMore} disabled={loadingMore}>Load more</button>}
         </>
     )
 }

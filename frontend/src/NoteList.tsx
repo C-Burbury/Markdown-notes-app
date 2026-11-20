@@ -68,7 +68,7 @@ export default function NoteList({version}: {version: number}) {
                 ))}
             </ul>
             {error && <p>{error}</p>}
-            {cursor && <button onClick={() => load(cursor)} disabled={loadingMore}>Next Page</button>}
+            {cursor && <button className="primary load-more" onClick={() => load(cursor)} disabled={loadingMore}>Load more</button>}
         </div>
     );
 
